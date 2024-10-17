@@ -1,0 +1,14 @@
+<h1> Create new listing </h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_exempt %}
+    {{form.as_p}}
+
+    <h3>Upload Images</h3>
+    {{ formset.management_form }}
+    
+    {% for image in formset %}
+        {{ image.as_p }}
+    {% endfor %}
+    <button type="submit" value="Create"> Create Listing</button>
+</form>
