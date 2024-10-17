@@ -57,8 +57,11 @@ def booking_list(request):
     return HttpResponse(template.render(context=context, request=request))
 
 
-def payment(request, booking_id):
-    pass
+def payment(request):
+    return HttpResponse(loader.get_template('bookings/payment.html').render(request=request))
+
+def succes(request):
+    return HttpResponse(loader.get_template('bookings/success.html').render(request=request))
 
 def review_create(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
