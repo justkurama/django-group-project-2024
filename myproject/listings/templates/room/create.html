@@ -1,7 +1,7 @@
 <h1> Create new room </h1>
 
 <form method="POST" enctype="multipart/form-data">
-    {% csrf_exempt %}
+    {% csrf_token %}
     {{form.as_p}}
 
     <h3>Upload Images</h3>

@@ -1,5 +1,5 @@
 <h1>{{ room.title }}</h1>
-{% if room.hotel == user.hotel %}
+{% if room.hotel.host == user %}
     <a href="{% url 'room_update' room.id %}"><Button type="button">Edit</Button></a>
     <a href="{% url 'room_delete' room.id %}"><Button type="button">Delete</Button></a>
 {% endif %}

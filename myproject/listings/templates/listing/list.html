@@ -5,7 +5,9 @@
         {% for listing in listings %}
             <li>
                 <h2> <a href="{% url 'listing_detail' listing.id %}" style="text-decoration: none;">{{listing.title}}</a></h2>
-                <p> {{listing.descrition | slice: ":20"}} {% if listing.description|length > 20 %}...{% endif %}</p>
+                <!-- FIXME: slice in room also -->
+                
+                <p> {{listing.description|slice:"0:20"}} {% if listing.description|length > 20 %}...{% endif %}</p>
                 <p><strong>Price: </strong> {{listing.price_per_night}} </p>
             </li>
         {% endfor %}

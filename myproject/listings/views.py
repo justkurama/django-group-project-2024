@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.shortcuts import redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
 from django.template import loader
-from models import Listing, Room, ListingImage, RoomImage
-from forms import ListingCreationForm, RoomCreationForm, ListingImageFormSet, RoomImageFormSet
+from .models import Listing, Room, ListingImage, RoomImage
+from .forms import ListingCreationForm, RoomCreationForm, ListingImageFormSet, RoomImageFormSet
 from django.contrib import messages
 
 
@@ -11,7 +11,7 @@ from django.contrib import messages
 
 def create_listing(request):
     if request.method == 'POST':
-        form = ListingCreationForm(request.POST. request.FILES)
+        form = ListingCreationForm(request.POST, request.FILES)
         imageset = ListingImageFormSet(request.POST, request.FILES, queryset=ListingImage.objects.none())
         if form.is_valid() and imageset.is_valid():
             listing = form.save(commit=False)
@@ -44,21 +44,21 @@ def listing_list(request):
         'listings': listings,
     }
 
-    return HttpResponse(template.render(request, context))
+    return HttpResponse(template.render(request=request, context=context))
 
-def listing_detail(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id)
+def listing_detail(request, id):
+    listing = get_object_or_404(Listing, id=id)
     template = loader.get_template('listing/detail.html')
     context ={
         'listing': listing,
         'user': request.user,
     }
 
-    return HttpResponse(template.render(request, context))
+    return HttpResponse(template.render(request=request, context=context))
 
 
-def update_listing(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id)
+def update_listing(request, id):
+    listing = get_object_or_404(Listing, id=id)
     if request.method == 'POST':
         form = ListingCreationForm(request.POST, instance=listing)
         images = ListingImageFormSet(request.POST, request.FILES, queryset=ListingImage.objects.filter(listing = listing))
@@ -76,8 +76,8 @@ def update_listing(request, listing_id):
     return render(request, 'listing/update.html', {'listing_form': form,
                                                     'formset': images})
 
-def delete_listing(request, listing_id):
-    listing = Listing.objects.filter(id=listing_id)
+def delete_listing(request, id):
+    listing = Listing.objects.filter(id=id)
     if request.method == 'POST' and listing.host == request.user: 
         ListingImage.objects.filter(listing = listing).delete()
         listing.delete()
@@ -87,7 +87,7 @@ def delete_listing(request, listing_id):
 # All about room
 def create_room(request):
     if request.method == 'POST':
-        form = RoomCreationForm(request.POST. request.FILES)
+        form = RoomCreationForm(request.POST, request.FILES)
         imageset = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.none())
         if form.is_valid() and imageset.is_valid():
             room = form.save(commit=False)
@@ -121,21 +121,21 @@ def room_list(request):
         'rooms': rooms,
     }
 
-    return HttpResponse(template.render(request, context))
+    return HttpResponse(template.render(context, request))
 
-def room_detail(request, room_id):
-    room = get_object_or_404(Room, id=room_id)
+def room_detail(request, id):
+    room = get_object_or_404(Room, id=id)
     template = loader.get_template('room/detail.html')
     context ={
         'room': room,
         'user': request.user,
     }
 
-    return HttpResponse(template.render(request, context))
+    return HttpResponse(template.render(context, request))
 
 
-def update_listing(request, room_id):
-    room = get_object_or_404(Room, id=room_id)
+def update_room(request, id):
+    room = get_object_or_404(Room, id=id)
     if request.method == 'POST':
         form = RoomCreationForm(request.POST, instance=room)
         images = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.filter(room = room))
