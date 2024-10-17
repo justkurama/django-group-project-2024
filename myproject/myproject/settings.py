@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',  # Add your app name here
+    'bootstrap5'
+    'users',
     'listings',
+    'bookings',
 ]
 
 AUTH_USER_MODEL = 'users.User'  # Add this line to specify the custom user model
@@ -129,3 +131,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'  # The URL prefix for media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+PAYPAL_RECEIVER_EMAIL = ''
+PAYPAL_TEST = True
