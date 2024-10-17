@@ -1,0 +1,13 @@
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ listing_form.as_p }}
+    
+    <h3>Update Images</h3>
+    {{ formset.management_form }}
+    
+    {% for form in formset %}
+        {{ form.as_p }}
+    {% endfor %}
+    
+    <button type="submit">Update Listing</button>
+</form>

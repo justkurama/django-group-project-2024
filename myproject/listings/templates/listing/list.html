@@ -1,0 +1,15 @@
+
+
+{% if listings %}
+    <ul>
+        {% for listing in listings %}
+            <li>
+                <h2> <a href="{% url 'listing_detail' listing.id %}" style="text-decoration: none;">{{listing.title}}</a></h2>
+                <p> {{listing.descrition | slice: ":20"}} {% if listing.description|length > 20 %}...{% endif %}</p>
+                <p><strong>Price: </strong> {{listing.price_per_night}} </p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>No listings available at the moment.</h3>
+{% endif %}

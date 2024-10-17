@@ -1,0 +1,15 @@
+
+
+{% if rooms %}
+    <ul>
+        {% for room in rooms %}
+            <li>
+                <h2> <a href="{% url 'room_detail' room.id %}" style="text-decoration: none;">{{room.title}}</a></h2>
+                <p> {{room.descrition | slice: ":20"}} {% if room.description|length > 20 %}...{% endif %}</p>
+                <p><strong>Price: </strong> {{room.price_per_night}} </p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>No rooms available at the moment.</h3>
+{% endif %}
