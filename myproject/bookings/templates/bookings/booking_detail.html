@@ -1,4 +1,4 @@
-{% extends "bookings/master.html" %}
+{% extends "base.html" %}
 
 {% block title %}
 Booking Details
@@ -10,7 +10,7 @@ Booking Details
 <p>Booking ID: {{ booking.id }}</p>
 <p>Customer: {{ booking.customer.email }}</p>
 <p>Listing: {{ booking.listing.title }}</p>
-<p>Room: {{ booking.room.name }}</p>
+<p>Room: {{ booking.room.room_number }}</p>
 <p>Check-in: {{ booking.check_in }}</p>
 <p>Check-out: {{ booking.check_out }}</p>
 <p>Total Price: {{ booking.total_price }}</p>
