@@ -17,6 +17,7 @@ class Booking(models.Model):
     check_out = models.DateField()
     total_price = models.FloatField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+    paypal_transaction_id = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"Booking {self.id} - {self.customer.email} - {self.listing.title}" 

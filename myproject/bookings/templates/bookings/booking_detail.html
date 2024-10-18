@@ -1,0 +1,21 @@
+{% extends "bookings/master.html" %}
+
+{% block title %}
+Booking Details
+{% endblock %}
+
+{% block content %}
+
+<h1>Booking Details</h1>
+<p>Booking ID: {{ booking.id }}</p>
+<p>Customer: {{ booking.customer.email }}</p>
+<p>Listing: {{ booking.listing.title }}</p>
+<p>Room: {{ booking.room.name }}</p>
+<p>Check-in: {{ booking.check_in }}</p>
+<p>Check-out: {{ booking.check_out }}</p>
+<p>Total Price: {{ booking.total_price }}</p>
+<p>Status: {{ booking.status }}</p>
+
+<a href="{% url 'booking_list' %}">Back to bookings</a>
+
+{% endblock %}

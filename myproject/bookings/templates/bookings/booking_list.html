@@ -1,0 +1,22 @@
+{% extends "bookings/master.html" %}
+
+{% block title %}
+Bookings
+{% endblock %}
+
+{% block content %}
+
+<h1>My Bookings</h1>
+    
+<ul>
+    {% for booking in bookings %}
+        <li>
+            <a href="{% url 'booking_detail' booking.id %}">Booking ID: {{ booking.id }} for {{ booking.listing.title }}</a>
+            - {{ booking.status }}
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="/">Back to home</a>
+
+{% endblock %}

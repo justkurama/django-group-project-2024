@@ -1,0 +1,13 @@
+{% extends "bookings/master.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+
+<h2>Payment Successful!</h2>
+<p>Your payment for booking {{ payment.booking.id }} has been completed.</p>
+<a href="{% url 'booking_list' %}">Back to Bookings</a>
+
+{% endblock %}

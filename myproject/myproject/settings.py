@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'paypal.standard.ipn',
     'bootstrap5',
     'users',
     'listings',
@@ -132,5 +133,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'  # The URL prefix for media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-PAYPAL_RECEIVER_EMAIL = ''
+PAYPAL_RECEIVER_EMAIL = 'sb-gj8we33367370_api1.business.example.com'
 PAYPAL_TEST = True

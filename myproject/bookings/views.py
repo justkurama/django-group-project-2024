@@ -1,6 +1,9 @@
 from django.shortcuts import redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
 from django.template import loader
+from django.conf import settings
+from django.urls import reverse
+from paypal.standard.forms import PayPalPaymentsForm
 from .forms import BookingForm, PaymentForm, ReviewForm
 from .models import Booking, Payment, Review
 from listings.models import Listing, Room
@@ -9,24 +12,25 @@ def booking_create(request, listing_id, room_id):
     listing = get_object_or_404(Listing, id=listing_id)
     room = None
     if room_id:
-        room = get_object_or_404(Room, room_id, hotel=listing)
+        room = get_object_or_404(Room, id=room_id)
 
-    if request.POST == "POST":
+    if request.method == "POST":
         form = BookingForm(request.POST)
         if form.is_valid():
             booking = form.save(commit=False)
             booking.customer = request.user
+            booking.listing = listing
             if room:
                 booking.room = room
             
             booking.total_price = calc_total_price(booking.check_in, booking.check_out, listing, room)
             booking.save()
-            return redirect('payment', booking_id=booking.id)
+            return redirect('payment_create', booking_id=booking.id)
         
     else:
         form = BookingForm()
 
-    template = loader.get_template('booking_create.html')
+    template = loader.get_template('bookings/booking_create.html')
     context = {
         'listing': listing,
         'room': room,
@@ -38,7 +42,7 @@ def booking_create(request, listing_id, room_id):
 
 def booking_detail(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, customer=request.user)
-    template = loader.get_template('booking_detail.html')
+    template = loader.get_template('bookings/booking_detail.html')
     context = {
         'booking': booking
     }
@@ -48,8 +52,8 @@ def booking_detail(request, booking_id):
 
 
 def booking_list(request):
-    bookings = get_list_or_404(Booking, customer=request.user)
-    template = loader.get_template('booking_list.html')
+    bookings = Booking.objects.filter(customer=request.user)
+    template = loader.get_template('bookings/booking_list.html')
     context = {
         'bookings': bookings,
     }
@@ -57,16 +61,44 @@ def booking_list(request):
     return HttpResponse(template.render(context=context, request=request))
 
 
-def payment(request):
-    return HttpResponse(loader.get_template('bookings/payment.html').render(request=request))
+def payment_create(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, customer=request.user)
+    payment = Payment.objects.create(booking=booking, amount=booking.total_price)
 
-def succes(request):
-    return HttpResponse(loader.get_template('bookings/success.html').render(request=request))
+    host = request.get_host()
+    
+    paypal_checkout = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': payment.amount,
+        'item_name': f'Booking #{booking.id}',
+        'invoice': str(payment.id),
+        'currency_code': 'KZT',
+        'charset': 'UTF-8',
+        'notify_url': f"http://{host}{reverse('paypal-ipn')}",
+        'return_url': f"http://{host}{reverse('payment_success', kwargs={'booking_id': booking.id})}",
+        'cancel_url': f"http://{host}{reverse('payment_cancel', kwargs={'booking_id': booking.id})}",
+    }
+
+    paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+
+    context = {
+        'booking': booking,
+        'payment': payment,
+        'paypal': paypal_payment,
+    }
+
+    return HttpResponse(loader.get_template('bookings/payment_create.html').render(context=context, request=request))
+
+def payment_success(request):
+    return HttpResponse(loader.get_template('bookings/payment_success.html').render(request=request))
+
+def payment_cancel(request):
+    return HttpResponse(loader.get_template('bookings/payment_cancel.html').render(request=request))
 
 def review_create(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
 
-    if request.POST == "POST":
+    if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
@@ -88,7 +120,7 @@ def review_create(request, listing_id):
 
 def review_list(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
-    reviews = get_list_or_404(Review, listing=listing)
+    reviews = Review.objects.filter(Review, listing=listing)
     template = loader.get_template('review_list.html')
     context = {
         'reviews': reviews,

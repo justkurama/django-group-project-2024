@@ -1,0 +1,13 @@
+{% extends "bookings/master.html" %}
+
+{% block title %}
+Canceled
+{% endblock %}
+
+{% block content %}
+
+<h2>Payment Canceled</h2>
+<p>Your payment for booking {{ payment.booking.id }} was canceled.</p>
+<a href="{% url 'booking_list' %}">Back to Bookings</a>
+
+{% endblock %}

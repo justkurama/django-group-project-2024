@@ -1,0 +1,23 @@
+{% extends "bookings/master.html" %}
+
+{% block title %}
+New Booking
+{% endblock %}
+
+{% block content %}
+
+<h1>Create Booking for {{ listing.title }}</h1>
+    
+{% if room %}
+    <p>Room: {{ room.name }}</p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Book Now</button>
+</form>
+
+<a href="{% url 'booking_list' %}">Back to bookings</a>
+
+{% endblock %}

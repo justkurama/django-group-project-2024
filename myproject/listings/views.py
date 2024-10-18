@@ -92,7 +92,6 @@ def create_room(request):
         if form.is_valid() and imageset.is_valid():
             room = form.save(commit=False)
             # FIXME: ???
-            room.hotel = request.user.listing
             room.save() 
             for image in imageset.cleaned_data:
                 if image:
