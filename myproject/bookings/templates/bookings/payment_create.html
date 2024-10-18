@@ -8,9 +8,8 @@ Payment
 
 <h2>Booking Payment</h2>
 <p>Amount to pay: {{ payment.amount }} USD</p>
-<form method="post" action="{% url 'paypal-ipn' %}">
-    {{ form.render }}
-    <input type="submit" value="Pay with PayPal">
-</form>
+
+    {{ paypal.render }}
+
 
 {% endblock %}

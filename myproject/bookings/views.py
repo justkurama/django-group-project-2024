@@ -65,18 +65,16 @@ def payment_create(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, customer=request.user)
     payment = Payment.objects.create(booking=booking, amount=booking.total_price)
 
-    host = request.get_host()
-    
     paypal_checkout = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': payment.amount,
-        'item_name': f'Booking #{booking.id}',
+        'amount': str(payment.amount),
+        'item_name': f"Booking #{booking.id}",
         'invoice': str(payment.id),
-        'currency_code': 'KZT',
+        'currency_code': 'USD',
         'charset': 'UTF-8',
-        'notify_url': f"http://{host}{reverse('paypal-ipn')}",
-        'return_url': f"http://{host}{reverse('payment_success', kwargs={'booking_id': booking.id})}",
-        'cancel_url': f"http://{host}{reverse('payment_cancel', kwargs={'booking_id': booking.id})}",
+        'notify_url':  request.build_absolute_uri(reverse('paypal-ipn')),
+        'return_url': request.build_absolute_uri(reverse('payment_success', kwargs={'booking_id': booking.id, 'payment_id': payment.id})),
+        'cancel_url':  request.build_absolute_uri(reverse('payment_cancel', kwargs={'booking_id': booking.id})),
     }
 
     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
@@ -89,11 +87,17 @@ def payment_create(request, booking_id):
 
     return HttpResponse(loader.get_template('bookings/payment_create.html').render(context=context, request=request))
 
-def payment_success(request):
-    return HttpResponse(loader.get_template('bookings/payment_success.html').render(request=request))
+def payment_success(request, booking_id, payment_id):
+    booking = Booking.objects.get(id=booking_id)
+    payment = Payment.objects.get(id=payment_id)
+    payment.status = "Paid"
+    payment.save()
 
-def payment_cancel(request):
-    return HttpResponse(loader.get_template('bookings/payment_cancel.html').render(request=request))
+    return HttpResponse(loader.get_template('bookings/payment_success.html').render(request=request, context={"booking": booking}))
+
+def payment_cancel(request, booking_id):
+    booking = Booking.objects.get(id=booking_id)
+    return HttpResponse(loader.get_template('bookings/payment_cancel.html').render(request=request, context={"booking": booking}))
 
 def review_create(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
