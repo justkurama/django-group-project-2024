@@ -91,6 +91,8 @@ def payment_success(request, booking_id, payment_id):
     booking = Booking.objects.get(id=booking_id)
     payment = Payment.objects.get(id=payment_id)
     payment.status = "Paid"
+    booking.status = "Confirmed"
+    booking.save()
     payment.save()
 
     return HttpResponse(loader.get_template('bookings/payment_success.html').render(request=request, context={"booking": booking}))
