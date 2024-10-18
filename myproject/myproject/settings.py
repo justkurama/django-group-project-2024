@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'paypal.standard.ipn',
-    'bootstrap5',
+    'django_bootstrap5',
     'users',
     'listings',
     'bookings',
@@ -58,6 +58,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'myproject.urls'
+LOGIN_URL = 'login_user'
+LOGOUT_REDIRECT_URL = 'home'
 
 TEMPLATES = [
     {

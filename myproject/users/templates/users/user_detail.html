@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}User Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>User Detail</h2>
+    <div class="card">
+        <div class="card-header">
+            {{ user.username }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ user.email }}</h5>
+            <p class="card-text"><strong>First Name:</strong> {{ user.profile.first_name }}</p>
+            <p class="card-text"><strong>Last Name:</strong> {{ user.profile.last_name }}</p>
+            <p class="card-text"><strong>Phone Number:</strong> {{ user.profile.phone_number }}</p>
+            {% if user.profile.profile_picture %}
+                <p class="card-text"><strong>Profile Picture:</strong></p>
+                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="img-fluid">
+            {% endif %}
+        </div>
+    </div>
+    <a href="{% url 'profile' %}" class="btn btn-secondary mt-3">Back to Profile</a>
+</div>
+{% endblock %}
