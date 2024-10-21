@@ -1,30 +1,39 @@
-<h1>{{ listing.title }}</h1>
-{% if listing.host == user %}
-    <a href="{% url 'listing_update' listing.id %}"><Button type="button">Edit</Button></a>
-    <a href="{% url 'listing_delete' listing.id %}"><Button type="button">Delete</Button></a>
-{% endif %}
-<div>
-    <h3>Images:</h3>
-    {% if listing.image %}
-    <div>
-        {% for image in listing.images.all %}
-        <img src="{{ image.image.url }}" alt="{{ listing.title }}">
-        {% endfor %}
-    </div>
-    {% else %}
-    <p>No image available.</p>
+{% extends 'base.html' %}
+
+{% block title %}Listing Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{{ listing.title }}</h1>
+    {% if listing.host == user %}
+        <a href="{% url 'listing_update' listing.id %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'listing_delete' listing.id %}" class="btn btn-danger">Delete</a>
     {% endif %}
-</div>
+    <div>
+        <h3>Images:</h3>
+        {% if listing.images.all %}
+        <div>
+            {% for image in listing.images.all %}
+            <img src="{{ image.image.url }}" alt="{{ listing.title }}" class="img-thumbnail" style="max-width: 150px;">
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No image available.</p>
+        {% endif %}
+    </div>
 
-<div>
-    <h2>Description</h2>
-    <p>{{ listing.description|linebreaksbr }}</p> <!-- Displaying description with line breaks -->
-</div>
+    <div>
+        <h2>Description</h2>
+        <p>{{ listing.description|linebreaksbr }}</p> <!-- Displaying description with line breaks -->
+    </div>
 
-<div>
-    <h3>Price: ${{ listing.price_per_night}}</h3>
-</div>
+    <div>
+        <h3>Price: ${{ listing.price_per_night }}</h3>
+    </div>
 
-<div>
-    <a href="{% url 'listing_list' %}">Back to Listings</a>
+    <div>
+        <a href="{% url 'listing_list' %}" class="btn btn-secondary">Back to Listings</a>
+        <a href="{% url 'booking_create' listing.id 0 %}" class="btn btn-success">Book</a> <!-- Updated Book button -->
+    </div>
 </div>
+{% endblock %}

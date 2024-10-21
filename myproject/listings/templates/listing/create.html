@@ -1,8 +1,11 @@
-<h1> Create new listing </h1>
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Create new listing</h1>
 
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{form.as_p}}
+    {{ form.as_p }}
 
     <h3>Upload Images</h3>
     {{ formset.management_form }}
@@ -10,5 +13,6 @@
     {% for image in formset %}
         {{ image.as_p }}
     {% endfor %}
-    <button type="submit" value="Create"> Create Listing</button>
+    <button type="submit" value="Create">Create Listing</button>
 </form>
+{% endblock %}
