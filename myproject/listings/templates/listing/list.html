@@ -1,17 +1,31 @@
+{% extends 'base.html' %}
 
+{% block title %}Listings{% endblock %}
 
-{% if listings %}
-    <ul>
-        {% for listing in listings %}
-            <li>
-                <h2> <a href="{% url 'listing_detail' listing.id %}" style="text-decoration: none;">{{listing.title}}</a></h2>
-                <!-- FIXME: slice in room also -->
-                
-                <p> {{listing.description|slice:"0:20"}} {% if listing.description|length > 20 %}...{% endif %}</p>
-                <p><strong>Price: </strong> {{listing.price_per_night}} </p>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <h3>No listings available at the moment.</h3>
-{% endif %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Listings</h2>
+    {% if user.is_authenticated %}
+        {% if user.is_host %}
+            <a href="{% url 'create_listing' %}" class="btn btn-primary mb-3">Create Listing</a>
+        {% endif %}
+    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            {% if listings %}
+                <ul class="list-group">
+                    {% for listing in listings %}
+                        <li class="list-group-item">
+                            <h5 class="card-title"><a href="{% url 'listing_detail' listing.id %}" style="text-decoration: none;">{{ listing.title }}</a></h5>
+                            <p class="card-text">{{ listing.description|slice:"0:20" }}{% if listing.description|length > 20 %}...{% endif %}</p>
+                            <p class="card-text"><strong>Price: </strong>{{ listing.price_per_night }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h3>No listings available at the moment.</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

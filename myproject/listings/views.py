@@ -5,11 +5,16 @@ from django.template import loader
 from .models import Listing, Room, ListingImage, RoomImage
 from .forms import ListingCreationForm, RoomCreationForm, ListingImageFormSet, RoomImageFormSet
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+@login_required
 def create_listing(request):
+    if not request.user.is_host:
+        messages.error(request, 'You do not have permission to create a listing.')
+        return redirect('listing_list')
+
     if request.method == 'POST':
         form = ListingCreationForm(request.POST, request.FILES)
         imageset = ListingImageFormSet(request.POST, request.FILES, queryset=ListingImage.objects.none())
@@ -22,8 +27,7 @@ def create_listing(request):
                     picture = image['image']
                     ListingImage.objects.create(listing=listing, image=picture)
 
-            messages.success(request, 'Listing created Succesfully')
-            # TODO: redirect to the listing_detail page 
+            messages.success(request, 'Listing created successfully')
             return redirect('success_creation')
         else: 
             messages.error(request, 'Listing isn\'t created!!!')
@@ -31,8 +35,7 @@ def create_listing(request):
         form = ListingCreationForm()
         imageset = ListingImageFormSet()
     
-    return render(request, 'listing/create.html', {'form': form,
-                                                   'formset': imageset})
+    return render(request, 'listing/create.html', {'form': form, 'formset': imageset})
 
 def success_creation(request):
     return render(request, 'listing/success.html')
@@ -40,7 +43,7 @@ def success_creation(request):
 def listing_list(request):
     listings = Listing.objects.all()
     template = loader.get_template('listing/list.html')
-    context ={
+    context = {
         'listings': listings,
     }
 
@@ -49,19 +52,18 @@ def listing_list(request):
 def listing_detail(request, id):
     listing = get_object_or_404(Listing, id=id)
     template = loader.get_template('listing/detail.html')
-    context ={
+    context = {
         'listing': listing,
         'user': request.user,
     }
 
     return HttpResponse(template.render(request=request, context=context))
 
-
 def update_listing(request, id):
     listing = get_object_or_404(Listing, id=id)
     if request.method == 'POST':
         form = ListingCreationForm(request.POST, instance=listing)
-        images = ListingImageFormSet(request.POST, request.FILES, queryset=ListingImage.objects.filter(listing = listing))
+        images = ListingImageFormSet(request.POST, request.FILES, queryset=ListingImage.objects.filter(listing=listing))
 
         if form.is_valid() and images.is_valid():
             form.save()
@@ -72,17 +74,16 @@ def update_listing(request, id):
             return redirect('listing_detail', id=listing.id)
     else:
         form = ListingCreationForm(request.POST, instance=listing)
-        images = ListingImageFormSet(request.POST, request.FILES, queryset=ListingImage.objects.filter(listing = listing))
-    return render(request, 'listing/update.html', {'listing_form': form,
-                                                    'formset': images})
+        images = ListingImageFormSet(request.POST, request.FILES, queryset=ListingImage.objects.filter(listing=listing))
+    return render(request, 'listing/update.html', {'listing_form': form, 'formset': images})
 
 def delete_listing(request, id):
     listing = Listing.objects.filter(id=id)
     if request.method == 'POST' and listing.host == request.user: 
-        ListingImage.objects.filter(listing = listing).delete()
+        ListingImage.objects.filter(listing=listing).delete()
         listing.delete()
         return redirect('listing_list')
-    return redirect('listing_deatil')
+    return redirect('listing_detail')
 
 # All about room
 def create_room(request):
@@ -91,15 +92,13 @@ def create_room(request):
         imageset = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.none())
         if form.is_valid() and imageset.is_valid():
             room = form.save(commit=False)
-            # FIXME: ???
             room.save() 
             for image in imageset.cleaned_data:
                 if image:
                     picture = image['image']
                     RoomImage.objects.create(room=room, image=picture)
 
-            messages.success(request, 'Listing created Succesfully')
-            # TODO: redirect to the success page 
+            messages.success(request, 'Room created successfully')
             return redirect('success_creation')
         else: 
             messages.error(request, 'Room isn\'t created!!!')
@@ -107,16 +106,15 @@ def create_room(request):
         form = RoomCreationForm()
         imageset = RoomImageFormSet()
     
-    return render(request, 'room/create.html', {'form': form,
-                                                   'formset': imageset})
-               
+    return render(request, 'room/create.html', {'form': form, 'formset': imageset})
+
 def success_creation(request):
     return render(request, 'listing/success.html')
 
 def room_list(request):
     rooms = Room.objects.all()
     template = loader.get_template('room/list.html')
-    context ={
+    context = {
         'rooms': rooms,
     }
 
@@ -125,19 +123,18 @@ def room_list(request):
 def room_detail(request, id):
     room = get_object_or_404(Room, id=id)
     template = loader.get_template('room/detail.html')
-    context ={
+    context = {
         'room': room,
         'user': request.user,
     }
 
     return HttpResponse(template.render(context, request))
 
-
 def update_room(request, id):
     room = get_object_or_404(Room, id=id)
     if request.method == 'POST':
         form = RoomCreationForm(request.POST, instance=room)
-        images = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.filter(room = room))
+        images = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.filter(room=room))
 
         if form.is_valid() and images.is_valid():
             form.save()
@@ -148,13 +145,12 @@ def update_room(request, id):
             return redirect('room_detail', id=room.id)
     else:
         form = RoomCreationForm(request.POST, instance=room)
-        images = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.filter(room = room))
-    return render(request, 'room/update.html', {'room_form': form,
-                                                    'formset': images})
+        images = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.filter(room=room))
+    return render(request, 'room/update.html', {'room_form': form, 'formset': images})
 
 def delete_room(request, room_id):
     room = Listing.objects.filter(id=room_id)
     if request.method == 'POST' and room.host == request.user: 
-        RoomImage.objects.filter(room = room).delete()
+        RoomImage.objects.filter(room=room).delete()
         room.delete()
     return redirect('room_list')
