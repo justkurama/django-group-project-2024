@@ -1,13 +1,30 @@
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ listing_form.as_p }}
-    
-    <h3>Update Images</h3>
-    {{ formset.management_form }}
-    
-    {% for form in formset %}
+{% extends 'base.html' %}
+
+{% block title %}Update Listing{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Update Your Listing</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         {{ form.as_p }}
-    {% endfor %}
-    
-    <button type="submit">Update Listing</button>
-</form>
+
+        <div class="form-group">
+            <label for="images">Upload New Images</label>
+            <input type="file" name="images" id="images" multiple class="form-control">
+        </div>
+
+        <h5>Existing Images</h5>
+        {% for image in existing_images %}
+        <div class="existing-image">
+            <img src="{{ image.image.url }}" alt="Listing Image" width="100">
+            <a href="{% url 'delete_image' image.id %}">Delete</a> <!-- Link to delete image -->
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Update Listing</button>
+        <a href="{% url 'listing_detail' listing.id %}" class="btn btn-secondary">Cancel</a>
+        </form>
+</div>
+{% endblock %}

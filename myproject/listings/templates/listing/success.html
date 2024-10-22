@@ -1,3 +1,27 @@
-<h1>Created Successfully!</h1>
+{% extends 'base.html' %}
 
-<a href="{% url 'listing_list' %}">Home</a>
+{% block title%} Create a listing {%endblock%}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-success text-center" role="alert">
+                <h4 class="alert-heading">Success!</h4>
+                <p>Your listing has been created successfully.</p>
+                <hr>
+                <p class="mb-0">You can view your listing or create a new one below.</p>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 d-flex justify-content-around">
+            <a href="{% url 'listing_list' %}" class="btn btn-primary">Back to listings</a>
+            <a href="{% url 'create_listing' %}" class="btn btn-secondary">Create Another Listing</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

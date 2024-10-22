@@ -1,30 +1,32 @@
-<h1>{{ room.title }}</h1>
-{% if room.hotel.host == user %}
-    <a href="{% url 'room_update' room.id %}"><Button type="button">Edit</Button></a>
-    <a href="{% url 'room_delete' room.id %}"><Button type="button">Delete</Button></a>
-{% endif %}
-<div>
-    <h3>Images:</h3>
-    {% if room.image %}
-    <div>
-        {% for image in room.images.all %}
-        <img src="{{ image.image.url }}" alt="{{ room.title }}">
-        {% endfor %}
+{% extends "base.html" %}
+
+{% block title %}
+    Room {{ room.room_number }} Details
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Room Details</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Room Number: {{ room.room_number }}</h5>
+            <p class="card-text"><strong>Description:</strong> {{ room.description }}</p>
+            <p class="card-text"><strong>Price per Night:</strong> ${{ room.price_per_night }}</p>
+            <p class="card-text"><strong>Capacity:</strong> {{ room.capacity }} guests</p>
+            <p class="card-text"><strong>Available From:</strong> {{ room.available_from }}</p>
+            <p class="card-text"><strong>Available To:</strong> {{ room.available_to }}</p>
+
+            <h5 class="mt-4">Hotel Information</h5>
+            <p class="card-text"><strong>Hotel Name:</strong> {{ room.hotel.title }}</p>
+            <p class="card-text"><strong>Hotel Description:</strong> {{ room.hotel.description }}</p>
+
+            <div class="mt-4">
+                <a href="{% url 'update_room' room.id %}" class="btn btn-primary">Edit Room</a>
+                <a href="{% url 'delete_room' room.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this room?');">Delete Room</a>
+                <a href="{% url 'room_list' %}" class="btn btn-secondary">Back to Room List</a>
+            </div>
+        </div>
     </div>
-    {% else %}
-    <p>No image available.</p>
-    {% endif %}
 </div>
-
-<div>
-    <h2>Description</h2>
-    <p>{{ room.description|linebreaksbr }}</p> <!-- Displaying description with line breaks -->
-</div>
-
-<div>
-    <h3>Price: ${{ room.price_per_night }}</h3>
-</div>
-
-<div>
-    <a href="{% url 'room_list' %}">Back to Listings</a>
-</div>
+{% endblock %}

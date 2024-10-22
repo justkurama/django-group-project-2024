@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title%} Create a listing {%endblock%}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-success text-center" role="alert">
+                <h4 class="alert-heading">Success!</h4>
+                <p>Your room has been created successfully.</p>
+                <hr>
+                <p class="mb-0">You can view your room or create a new one below.</p>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 d-flex justify-content-around">
+            <a href="{% url 'listing_list' %}" class="btn btn-primary">Back to listings</a>
+            <a href="{% url 'create_room' %}" class="btn btn-secondary">Create Another Room</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

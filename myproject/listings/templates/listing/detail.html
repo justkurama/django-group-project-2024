@@ -30,10 +30,15 @@
     <div>
         <h3>Price: ${{ listing.price_per_night }}</h3>
     </div>
+    <div>
+        {% if listing.property_type == 'Hotel'%}
+        <a href="{% url 'create_room' listing.id%}" class="btn btn-secondary mb-4">Create Room</a>
+        {%endif%}
+    </div>
 
     <div>
         <a href="{% url 'listing_list' %}" class="btn btn-secondary">Back to Listings</a>
-        <a href="{% url 'booking_create' listing.id 0 %}" class="btn btn-success">Book</a> <!-- Updated Book button -->
+        <a href="{% url 'booking_create' listing.id 0 %}" class="btn btn-success">Book</a> 
     </div>
 </div>
 {% endblock %}

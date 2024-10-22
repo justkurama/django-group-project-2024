@@ -19,7 +19,7 @@ class Listing(models.Model):
     price_per_night = models.FloatField()
     available_from = models.DateField(default=datetime.date.today)
     available_to = models.DateField(default=datetime.date.today() + datetime.timedelta(days=365))
-    host = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_host': True}, related_name='users_listings')
+    host = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'is_host': True}, related_name='listings')
 
 
     def __str__(self) -> str:
@@ -39,7 +39,7 @@ class Room(models.Model):
     price_per_night = models.FloatField()
     capacity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-    hotel = models.ForeignKey(Listing, on_delete=models.CASCADE, name='hotel_rooms')
+    hotel = models.ForeignKey(Listing, on_delete=models.CASCADE, limit_choices_to={'property_type' == 'Hotel'}, name='rooms')
     available_from = models.DateField(default=datetime.date.today)
     available_to = models.DateField(default=datetime.date.today() + datetime.timedelta(days=365))
 
