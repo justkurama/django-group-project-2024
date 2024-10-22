@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <!-- {% if user.is_authenticated %}
+        {% if user.is_host %}
+            <a href="{% url 'create_room' %}" class="btn btn-primary mb-3">Create Room</a>
+        {% endif %} -->
+    <!-- {% endif %} -->
     {% if rooms %}
         <ul>
             {% for room in rooms %}
