@@ -49,6 +49,10 @@ def listing_list(request):
     return HttpResponse(template.render(request=request, context=context))
 
 def my_listings(request):
+    if not request.user.is_host:
+        messages.error(request, 'You do not have permission to create a listing.')
+        return redirect('listing_list')
+
     listings = Listing.objects.filter(host = request.user)
     template = loader.get_template('listing/list.html')
     context = {
