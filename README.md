@@ -5,14 +5,25 @@
 
 This project is a Django-based booking platform inspired by popular services like Airbnb, Booking.com, and Agoda. It allows users to register and authenticate, manage property listings, book rooms, process payments, and leave reviews for properties. The platform offers full user, host, and admin functionalities, ensuring a smooth booking experience for all users.
 
-## Features
+## Functionality
 
-- **User Authentication and Authorization**: Secure registration and login system with roles for users, hosts, and admin.
-- **Property Listing and Management**: Hosts can list properties and manage them by adding rooms, images, and availability.
-- **Booking System**: Users can book available listings or rooms, view their bookings, and manage check-ins/outs.
-- **Payment Processing**: Integration with PayPal to handle booking payments securely.
-- **Review and Rating System**: Users can leave reviews and rate listings after their stay.
-- **Admin Panel**: Admins can manage users, properties, and bookings through Django’s built-in admin interface.
+### Current Features:
+1. **Property Listings**: Users can browse available hotel listings, view rooms, and make reservations.
+   - **Browse Hotels** button redirects users to the listings where they can filter and select rooms or hotels.
+2. **User Profiles**: After logging in, users can manage their profiles, view their listings (for hosts), or make new bookings.
+3. **Host Features**: Hosts have the ability to list properties, add rooms, and update or delete listings.
+4. **Booking System**: Users can select dates and properties to make bookings. Each booking shows check-in/check-out information and the total price.
+5. **User Authentication**: The platform allows users to log in, log out, and update their profiles. User roles include regular users (guests) and hosts.
+6. **Payment Integration**: Supports PayPal payments for booking confirmation.
+
+### Planned Future Features:
+1. **Car Booking**: Integration of a car booking service alongside hotel reservations, allowing users to rent vehicles during their stay.
+2. **Password Reset via Email**: Implementation of a password recovery feature through email, allowing users to reset their passwords if forgotten.
+3. **Chat with Support**: Adding a live chat feature for direct communication with customer support, enabling real-time assistance for users with inquiries or issues.
+4. **Enhanced Filters and Search**: Expanding the search functionality to include more filters for finding listings based on additional preferences like location, price range, property type, and more.
+5. **Mobile App Integration**: Plans to develop a mobile app for iOS and Android, providing a seamless experience for users to book on the go.
+
+   ![fig2](myproject/media/assets/fanct.png)
 
 ## Installation
 
@@ -68,7 +79,7 @@ This project is a Django-based booking platform inspired by popular services lik
 
 ## Database Schema
 
-![Database Schema](myproject/media/assets/db.jpg)
+![Database Schema](myproject/media/assets/dbu.png)
 
 ## Database Models
 
